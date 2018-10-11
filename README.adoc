@@ -1,0 +1,74 @@
+:imagesdir: doc
+
+= PHP Quiz
+
+Quiz app for students
+
+== Installation
+
+To install all the required dependancies, you need to call composer:
+
+ composer install
+
+You need to run the SQL script on you Database:
+
+ ./src/db/phpQuiz.sql
+
+== Configuration
+
+The config file is here:
+
+ ./config/donfig.php
+
+If you use **Apache** `alias` functionality, you should set your alias name in the `site` section in the file.
+
+Then, in order to connect to your Database, you need to customize the `database` section.
+
+== Tests
+
+For the unit test, I'm actually using the https://phpunit.readthedocs.io/en/7.4/index.html[7.4.3 PhpUnit]
+
+I'm only testing the routing of the application to ensure it works well.
+
+ ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/PhpQuiz/ApplicationTest
+
+== What it looks like
+
+The homepage:
+
+.The PhpQuiz homepage
+image::welcome.png[align=center]
+
+The homepage after logged in:
+
+.The PhpQuiz logged in homepage
+image::connected.png[align=center]
+
+The quiz:
+
+.The PhpQuiz quiz
+image::quiz.png[align=center]
+
+The corrected quiz:
+
+.The PhpQuiz corrected quiz
+image::correction.png[align=center]
+
+== Coding standard
+
+ phpcs --config-set default_standard PSR2
+ phpcs --config-set php_version 70210
+
+== Contribute
+
+- Issue Tracker: https://github.com/sixdouglas/phpquiz/issues
+- Source Code: https://github.com/sixdouglas/phpquiz
+- Project Tracker : https://github.com/sixdouglas/phpquiz/projects/1
+
+== Support
+
+If you are having issues, please let us know.
+
+== License
+
+The project is licensed under the APACHE 2 license.

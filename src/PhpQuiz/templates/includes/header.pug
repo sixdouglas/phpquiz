@@ -1,0 +1,72 @@
+mixin displayMenuElement($quizzes)
+    li(class='nav-item dropdown')
+        a(class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') Quizzes
+        div(class='dropdown-menu' aria-labelledby='navbarDropdown')
+            each $quiz in $quizzes
+                - $href = $items['baseUrl'] . '/quiz/' . $quiz->getId()
+                a(class='dropdown-item' href=$href) #{quiz.name}
+
+mixin adminMenu()
+    - $href=$items['baseUrl'] . '/results'
+    li(class="nav-item")
+        a(class="nav-link" href=$href)='Results'
+    - $href=$items['baseUrl'] . '/users'
+    li(class="nav-item")
+        a(class="nav-link" href=$href)='Users'
+
+mixin login()
+    - $href=$items['baseUrl'] . '/login'
+
+    form(class='form-inline my-2 my-lg-0' id='loginForm' action=$href method='POST')
+        input(class='form-control form-control-sm mr-sm-2' type='text' name='login' autocomplete='username' placeholder='login' aria-label='login' value=$login)
+        input(class='form-control form-control-sm mr-sm-2' type='password' name='password' autocomplete='current-password' placeholder='password')
+        button(class='btn btn-sm btn-primary my-2 my-sm-0' type='submit' value='Login') Login
+
+mixin logout()
+    - $href=$items['baseUrl'] . '/logout'
+
+    form(class="form-inline my-2 ml-2 my-lg-0" id="logoutForm" action=$href method="post")
+        button(class="btn btn-sm btn-warning my-2 my-sm-0" type="submit") Disconnect
+
+mixin changePassword()
+    - $href=$items['baseUrl'] . '/password'
+
+    form(class="form-inline my-2 ml-2 my-lg-0" id="changePasswordForm" action=$href method="post")
+        button(class="btn btn-sm btn-warning my-2 my-sm-0" type="submit") Change Password
+
+header
+    nav(class='navbar navbar-expand-lg navbar-light bd-navbar bg-light')
+        a(class='navbar-brand' href='index.php') Php Quiz
+        button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+            span(class='navbar-toggler-icon')
+        div(class='collapse navbar-collapse' id='navbarSupportedContent')
+            ul(class='navbar-nav mr-auto')
+                if $items.isConnected
+                    +displayMenuElement($items.quizzes)
+                if $items.isAdmin
+                    +adminMenu()
+            - $user=$items['user']
+            span(class="mr-2")=$user.firstname
+            span(class="mr-2")=$user.lastname
+            if $items.isConnected
+                +changePassword
+                +logout
+            else
+                +login
+
+
+//-
+//- Copyright 2018 the original author or authors.
+//-
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+//-
+//-      http://www.apache.org/licenses/LICENSE-2.0
+//-
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License.
+//-

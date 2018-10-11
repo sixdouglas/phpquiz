@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="phpQuiz" xsi:noNamespaceSchemaLocation="phpcs.xsd">
+    <description>The coding standard for PHP Quiz.</description>
+
+    <!-- Include the whole PSR2 standard -->
+    <rule ref="PSR2">
+    </rule>
+</ruleset>

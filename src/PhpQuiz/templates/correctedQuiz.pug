@@ -1,0 +1,60 @@
+mixin quiz($quiz, $userAnswers, $user)
+    h1=$quiz.name
+    - $cpt = 1
+
+    each $userAnswer in $userAnswers
+        - $question = $userAnswer->getAnswer()->getQuestion()
+        - $questionLabel = '' . $cpt . ' - ' . $question->getName()
+        h3=$questionLabel
+        each $answer in $question.answers
+            - $checkName = 'check_' . $question->getId()
+            - $checkId = 'check_' . $answer->getId()
+            - $label = $answer->getName()
+            - $value = $answer->getId()
+            - $isUsersChoice = $answer->getId() === $userAnswer->getAnswer()->getId()
+            - $groupClass = 'form-group'
+            if $answer->isGood()
+                - $groupClass .= ' good'
+            div(class=$groupClass)
+                input(type='radio' class='form-check-input' disabled)(name=$checkName)(id=$checkId)(value=$value)(checked=$isUsersChoice)
+                label(for=$checkId)=$label
+                |
+                if ($answer->isGood() && $isUsersChoice)
+                    span(class='badge badge-success')='Right Answer'
+                else
+                    if $isUsersChoice
+                        span(class='badge badge-danger')='Wrong Answer'
+                if strlen($answer.text) > 0
+                    p=$answer.text
+        - $cpt++
+
+extends main
+
+block css
+    - $href=$items['baseUrl'] . '/css/quiz.css'
+    link(rel='stylesheet' href=$href crossorigin='anonymous')
+
+block content
+    div.container
+        - $userquiz=$items['userQuiz']
+        - $quiz=$userquiz->getQuiz()
+        - $userAnswers=$userquiz->getUserQuizAnswers()
+        - $user=$items['user']
+        +quiz($quiz, $userAnswers, $user)
+
+
+//-
+//- Copyright 2018 the original author or authors.
+//-
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+//-
+//-      http://www.apache.org/licenses/LICENSE-2.0
+//-
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License.
+//-

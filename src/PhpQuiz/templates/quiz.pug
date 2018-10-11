@@ -1,0 +1,64 @@
+mixin quiz($action, $quiz, $questions)
+    h1=$quiz.name
+    form(action=$action method='post' class="needs-validation")
+        - $cpt = 1
+        each $question in $questions
+            div(class='question')
+                - $questionLabel = '' . $cpt . ' - ' . $question->getName()
+                h3=$questionLabel
+                p=$question.text
+                - $even = true
+                each $answer in $question.answers
+                    - $class = 'form-group'
+                    if $even
+                        - $class .= ' even'
+                    else
+                        - $class .= ' odd'
+                    div(class=$class)
+                        div(class='form-check')
+                            - $checkName = 'check_' . $question->getId()
+                            - $checkId = 'check_' . $answer->getId()
+                            - $value = $answer->getId()
+                            input(type="radio" class="form-check-input" required)(name=$checkName)(id=$checkId)(value=$value)
+                            label(for=$checkId)=$answer.name
+                            div(class="valid-feedback") Looks good!
+                            div(class="invalid-feedback") Missing value!
+                            if strlen($answer.text) > 0
+                                p=$answer.text
+                    - $even = !$even
+            - $cpt++
+        button(type="submit" class="btn ml-md-1 mt-5 btn-primary") Submit
+        button(type="reset" class="btn ml-md-1 mt-5 btn-secondary") Cancel
+
+extends main
+
+block css
+    - $href=$items['baseUrl'] . '/css/quiz.css'
+    link(rel='stylesheet' href=$href crossorigin='anonymous')
+
+block content
+
+  div.container
+    - $action = $items['baseUrl'] . '/savequiz/' . $items['quiz']->getId()
+    +quiz($action, $items.quiz, $items.questions)
+
+block jscript
+    - $script=$items['baseUrl'] . '/js/quiz.js'
+    script(src=$script crossorigin='anonymous')
+
+
+//-
+//- Copyright 2018 the original author or authors.
+//-
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+//-
+//-      http://www.apache.org/licenses/LICENSE-2.0
+//-
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License.
+//-
