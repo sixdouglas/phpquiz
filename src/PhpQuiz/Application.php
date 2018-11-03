@@ -17,30 +17,40 @@
 
 namespace PhpQuiz;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use PhpQuiz\Controllers\Router;
+use ReflectionClass;
+use ReflectionMethod;
+
 class Application
 {
     protected $route;
     protected $srcPath;
+    protected $controllers;
     protected $actions;
     protected $defaultAction;
 
-    public function __construct($srcPath, $pathInfo)
+    public function __construct($srcPath, $pathInfo, $controllers)
     {
+        class_exists(Router::class, true);
         $this->route = ltrim($pathInfo, '/');
         $this->srcPath = $srcPath;
         $this->actions = array();
+        $this->fillActions($controllers);
     }
 
-    public function setDefaultAction(\Closure $callback)
-    {
-        $this->defaultAction = $callback;
-    }
+    /*
+        public function setDefaultAction(\Closure $callback)
+        {
+            $this->defaultAction = $callback;
+        }
 
-    public function addAction($path, \Closure $callback)
-    {
-        $this->actions[$path] = $callback;
-    }
-
+        public function addAction($path, \Closure $callback)
+        {
+            $this->actions[$path] = $callback;
+        }
+    */
     public function render()
     {
         $currentRoute = '';
@@ -57,11 +67,31 @@ class Application
         $this->renderPath($vars);
     }
 
+    private function fillActions($controllers)
+    {
+        $reader = new AnnotationReader();
+        foreach ($controllers as $key => $controller) {
+            $reflectionClass = new ReflectionClass($controller);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+            foreach ($methods as $key => $method) {
+                $routerAnnotation = $reader->getMethodAnnotation($method, 'PhpQuiz\Controllers\Router');
+                if ($routerAnnotation !== null) {
+                    $methodCaller = new MethodCaller($controller, $method);
+                    if ($routerAnnotation->defaultRoute) {
+                        $this->defaultAction = $methodCaller;
+                    } else {
+                        $this->actions[$routerAnnotation->path] = $methodCaller;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @path: path defined for the current Action
      * @route: current HTTP Request route
      */
-    public function validateRouteForPath($path, $route)
+    private function validateRouteForPath($path, $route)
     {
         if (ltrim($path, '/') === $route) {
             return true;
@@ -78,9 +108,9 @@ class Application
         return false;
     }
 
-    private function callCallback($route, \Closure $callback)
+    private function callCallback($route, $callback)
     {
-        $vars = $callback($route) ?: array();
+        $vars = $callback->invoke($route) ?: array('view'=>'index');
         $vars['items']['baseUrl'] = $_SESSION['config']['site']['baseUrl'];
 
         return $vars;
