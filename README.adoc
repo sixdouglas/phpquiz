@@ -59,6 +59,42 @@ image::correction.png[align=center]
  phpcs --config-set default_standard PSR2
  phpcs --config-set php_version 70210
 
+== Architecture
+
+=== Big Picture
+
+The application big picture show you that there are different layers:
+
+- Templates
+- Controllers
+- Services
+- Repositories
+- Entities
+
+==== Templates
+
+They are created using the https://github.com/pug-php/pug[PUG PHP] framework.
+
+==== Controllers
+
+Used to retreive data from $_GET, $_POST, $_SESSION, call the Services and then fill the array to feed the Pug.
+
+==== Services
+
+Used to isolate the business logic and fetch database data through the Repositories.
+
+==== Repositories
+
+Data Access Abstraction of the database built using https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/working-with-objects.html#custom-repositories[Doctrine ORM Custom Repositories].
+
+==== Entities
+
+Database abstraction using https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/basic-mapping.html#basic-mapping[Doctrine ORM].
+
+=== Remarks
+
+The Controller path -> method association is done through https://www.doctrine-project.org/projects/doctrine-annotations/en/1.6/index.html[annotation processing]
+
 == Contribute
 
 - Issue Tracker: https://github.com/sixdouglas/phpquiz/issues
