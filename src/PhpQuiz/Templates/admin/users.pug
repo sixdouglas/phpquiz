@@ -1,9 +1,9 @@
-extends main
+extends ../main
 
 block content
     h1(class='text-center mb-4')='Users'
     div(class="container")
-        - $action = $items['baseUrl'] . '/saveusers'
+        - $action = $items['baseUrl'] . '/admin/saveusers'
         form(action=$action method='post' class="needs-validation")
             div(class="form-group row")
                 label(for="inputSession")='Users as CSV:'

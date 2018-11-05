@@ -55,7 +55,7 @@ class QuizController extends AbstractController
         $quiz = $this->getQuiz($quizId);
         $questions = $this->getQuestions($quiz);
         $items = array(
-            'view' => 'Templates/quiz',
+            'view' => 'quiz',
             'quizzes' => $quizzes,
             'quiz' => $quiz,
             'user' => $user,
@@ -109,7 +109,7 @@ class QuizController extends AbstractController
         $user = UserModel::getConnectedUser();
         $userQuiz = $this->getUserQuiz($user, $quizId);
         $items = array(
-                'view' => 'Templates/correctedQuiz',
+                'view' => 'correctedQuiz',
                 'quizzes' => $quizzes,
                 'userQuiz' => $userQuiz,
                 'user' => $user,

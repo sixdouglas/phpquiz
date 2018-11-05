@@ -1,4 +1,4 @@
-extends main
+extends ../main
 
 block content
     h1(class='text-center mb-4')='Quiz Results'
@@ -12,7 +12,7 @@ block content
                         button(class="btn btn-secondary dropdown-toggle" type="button" id="sessionSropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")='Sessions'
                         div(class="dropdown-menu" aria-labelledby="sessionSropdownButton")
                             each $session in $items.sessions
-                                - $href=$items['baseUrl'] . '/results/session/' . $session->getId()
+                                - $href=$items['baseUrl'] . '/admin/results/session/' . $session->getId()
                                 - $class='dropdown-item'
                                 if (array_key_exists('session', $items) && $session->getId() === $items['session']->getId())
                                     - $class .= ' active'
@@ -26,7 +26,7 @@ block content
                         button(class="btn btn-secondary dropdown-toggle" type="button" id="sessionSropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")='Quizzes'
                         div(class="dropdown-menu" aria-labelledby="sessionSropdownButton")
                             each $quiz in $items.session.quizzes
-                                - $href=$items['baseUrl'] . '/results/session/' . $items['session']->getId() . '/quiz/' . $quiz->getId()
+                                - $href=$items['baseUrl'] . '/admin/results/session/' . $items['session']->getId() . '/quiz/' . $quiz->getId()
                                 - $class='dropdown-item'
                                 if (array_key_exists('quiz', $items) && $quiz->getId() === $items['quiz']->getId())
                                     - $class .= ' active'

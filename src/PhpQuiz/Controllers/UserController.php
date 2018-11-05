@@ -47,7 +47,7 @@ class UserController extends AbstractController
         $quizzes = null;
         $items = null;
         $items = array(
-                'view' => 'Templates/index',
+                'view' => 'index',
                 'login' => $_POST['login'],
                 'quizzes' => $quizzes,
                 'isConnected' => UserModel::isConnected(),
@@ -70,7 +70,7 @@ class UserController extends AbstractController
         $user = UserModel::getConnectedUser();
         $quizzes = $this->getQuizzes();
         $items = array(
-                'view' => 'Templates/password',
+                'view' => 'password',
                 'user' => $user,
                 'quizzes' => $quizzes,
                 'showAlert' => false,
@@ -114,7 +114,7 @@ class UserController extends AbstractController
         $user = UserModel::getConnectedUser();
         $quizzes = $this->getQuizzes();
         $items = array(
-                'view' => 'Templates/password',
+                'view' => 'password',
                 'user' => $user,
                 'alert' => $alert,
                 'showAlert' => true,

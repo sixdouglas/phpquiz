@@ -1,0 +1,165 @@
+extends ../main
+
+mixin modalAdd()
+    div(class="modal fade" id="addSessionModal" tabindex="-1" role="dialog" aria-labelledby="addSessionModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="addSessionModalLabel")='Add Session'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Session.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="addNameInput")='Name'
+                        input(type="text" class="form-control" id="addNameInput" aria-describedby="addNameHelp" placeholder="Enter name")
+                        small(id="addNameHelp" class="form-text text-muted")
+                            | Enter the Session Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="addCodeInput")='Code'
+                        input(type="text" class="form-control" id="addCodeInput" aria-describedby="addCodeHelp" placeholder="Enter code")
+                        small(id="addCodeHelp" class="form-text text-muted")
+                            | Enter the Session Code. Try to make it unique.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="addSessionModalSave" class="btn btn-primary")='Add Session'
+
+
+mixin modalEdit()
+    div(class="modal fade" id="editSessionModal" tabindex="-1" role="dialog" aria-labelledby="editSessionModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="editSessionModalLabel")='Edit Session'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Session.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="editNameInput")='Name'
+                        input(type="text" class="form-control" id="editNameInput" aria-describedby="editNameHelp" placeholder="Enter name")
+                        small(id="editNameHelp" class="form-text text-muted")
+                            | Enter the Session Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="editCodeInput")='Code'
+                        input(type="text" class="form-control" id="editCodeInput" aria-describedby="editCodeHelp" placeholder="Enter code")
+                        small(id="editCodeHelp" class="form-text text-muted")
+                            | Enter the Session Code. Try to make it unique.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="editSessionModalSave" class="btn btn-primary")='Save changes'
+
+
+mixin modalRemove()
+    div(class="modal fade" id="removeSessionModal" tabindex="-1" role="dialog" aria-labelledby="removeSessionModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="removeSessionModalLabel")='Remove Session'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Session.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="removeNameInput")='Name'
+                        input(type="text" class="form-control" id="removeNameInput" aria-describedby="removeNameHelp" placeholder="Enter name" readonly)
+                        small(id="removeNameHelp" class="form-text text-muted")
+                            | Enter the Session Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="removeCodeInput")='Code'
+                        input(type="text" class="form-control" id="removeCodeInput" aria-describedby="removeCodeHelp" placeholder="Enter code" readonly)
+                        small(id="removeCodeHelp" class="form-text text-muted")
+                            | Enter the Session Code. Try to make it unique.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="removeSessionModalSave" class="btn btn-primary")='Remove Session'
+
+block content
+    h3(class='text-center mb-4')='Sessions'
+    - $href=$items['baseUrl'] . '/admin/sessions/add'
+    p(class='text-center')
+        | New session:
+        a(href='#' class='green ml-2' data-toggle='modal' data-target='#addSessionModal')
+            i(class='fas fa-plus-circle')
+
+    if $items.sessions
+        div(class="container mt-5")
+            table(class="table table-striped table-sm")
+                thead
+                    tr
+                    th(scope="col")='#'
+                    th(width='70%' scope="col")='Name'
+                    th(scope="col")='Action'
+                tbody
+                    each $session, $index in $items.sessions
+                        tr
+                            th(scope="row")=$index
+                            td=$session.name
+                            td
+                                - $name= $session->getName()
+                                - $code= $session->getCode()
+                                - $id= $session->getId()
+                                a(href='#' class='mr-2' data-toggle='modal' data-target='#editSessionModal' data-name=$name data-code=$code data-id=$id)
+                                    i(class='fas fa-edit')
+                                a(href='#' class='red' data-toggle='modal' data-target='#removeSessionModal' data-name=$name data-code=$code data-id=$id)
+                                    i(class='far fa-times-circle')
+    +modalAdd()
+    +modalEdit()
+    +modalRemove()
+    div(class="loading")
+        div(class="loader")
+
+block css
+    - $href=$items['baseUrl'] . '/css/sessions.css'
+    link(rel='stylesheet' href=$href crossorigin='anonymous')
+    link( rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous')
+
+block jscript
+    - $script=$items['baseUrl'] . '/js/sessions.js'
+    script(src=$script crossorigin='anonymous')
+
+//-
+//- Copyright 2018 the original author or authors.
+//-
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+//-
+//-      http://www.apache.org/licenses/LICENSE-2.0
+//-
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License.
+//-

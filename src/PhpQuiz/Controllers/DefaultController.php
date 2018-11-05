@@ -35,7 +35,7 @@ class DefaultController extends AbstractController
         }
 
         $items = array(
-            'view' => 'Templates/index',
+            'view' => 'index',
             'quizzes' => $quizzes,
             'user' => $user,
             'isConnected' => UserModel::isConnected(),

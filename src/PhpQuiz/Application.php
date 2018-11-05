@@ -122,7 +122,7 @@ class Application
         $pug->setOption('paths', [
             $this->srcPath,
         ]);
-        $output = $pug->renderFile(__DIR__.'/'.$vars['items']['view'].'.pug', $vars);
+        $output = $pug->renderFile($vars['items']['view'].'.pug', $vars);
         echo $output;
     }
 }

@@ -53,4 +53,29 @@ class SessionService
     {
         return $this->sessionRepository->findOneById($sessionId);
     }
+
+    public function removeSession($sessionId)
+    {
+        $session = $this->getSession($sessionId);
+        $this->entityManager->remove($session);
+        $this->entityManager->flush();
+    }
+
+    public function updateSession($sessionId, $name, $code)
+    {
+        $session = $this->getSession($sessionId);
+        $session->setName($name);
+        $session->setCode($code);
+        $this->entityManager->persist($session);
+        $this->entityManager->flush();
+    }
+
+    public function persistSession($name, $code)
+    {
+        $session = new Session;
+        $session->setName($name);
+        $session->setCode($code);
+        $this->entityManager->persist($session);
+        $this->entityManager->flush();
+    }
 }
