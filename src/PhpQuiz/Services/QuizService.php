@@ -51,6 +51,11 @@ class QuizService
         return $this->quizRepository->findBySession($user->getSession());
     }
 
+    public function findAll()
+    {
+        return $this->quizRepository->findAll();
+    }
+
     /**
      * Get the Quizz.
      *
@@ -66,5 +71,38 @@ class QuizService
     public function isNotPossibleAnswer($quiz, $questionId, $answerId)
     {
         return $this->quizRepository->findQuestionAnswer($quiz->getId(), $questionId, $answerId) === null;
+    }
+
+    public function removeQuiz($quizId)
+    {
+        $quiz = $this->getQuiz($quizId);
+        $this->entityManager->remove($quiz);
+        $this->entityManager->flush();
+    }
+
+    public function updateQuiz($quizId, $name, $code, $open)
+    {
+        $quiz = $this->getQuiz($quizId);
+        $quiz->setName($name);
+        $quiz->setCode($code);
+        $quiz->setOpen($open);
+        $this->entityManager->persist($quiz);
+        $this->entityManager->flush();
+    }
+
+    public function persistQuiz($name, $code, $open)
+    {
+        $quiz = new Quiz;
+        $quiz->setName($name);
+        $quiz->setCode($code);
+        $quiz->setOpen($open);
+        $this->entityManager->persist($quiz);
+        $this->entityManager->flush();
+    }
+
+    public function saveQuiz($quiz)
+    {
+        $this->entityManager->persist($quiz);
+        $this->entityManager->flush();
     }
 }

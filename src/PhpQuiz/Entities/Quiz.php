@@ -144,7 +144,7 @@ class Quiz
     /**
      * Get open
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getOpen()
     {

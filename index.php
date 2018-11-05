@@ -24,16 +24,23 @@ if (!isset($_SESSION['config'])) {
     $_SESSION['config'] = parse_ini_file(__DIR__.'/config/config.properties', true);
 }
 
+use PhpQuiz\Controllers\DefaultController;
 use PhpQuiz\Controllers\QuizController;
 use PhpQuiz\Controllers\UserController;
-use PhpQuiz\Controllers\AdminController;
-use PhpQuiz\Controllers\DefaultController;
+use PhpQuiz\Controllers\Administration\QuizAdminController;
+use PhpQuiz\Controllers\Administration\ResultsAdminController;
+use PhpQuiz\Controllers\Administration\SessionAdminController;
+use PhpQuiz\Controllers\Administration\UserAdminController;
 use PhpQuiz\Application;
 
 $app = new Application(
     __DIR__.'/src/PhpQuiz/Templates',
     isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($argv, $argv[1]) ? $argv[1] : ''),
-    array(QuizController::class, UserController::class, AdminController::class, DefaultController::class)
+    array(
+        QuizController::class, UserController::class, DefaultController::class,
+        QuizAdminController::class, ResultsAdminController::class, SessionAdminController::class,
+        UserAdminController::class
+    )
 );
 
 $app->render();

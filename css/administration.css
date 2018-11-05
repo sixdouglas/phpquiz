@@ -2,11 +2,11 @@ th:last-child, td:last-child {
     text-align: center
 }
 
-a.red {
+a.red, span.red {
     color: red;
 }
 
-a.green {
+a.green, span.green {
     color: green;
 }
 

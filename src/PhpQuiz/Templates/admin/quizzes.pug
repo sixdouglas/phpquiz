@@ -1,61 +1,179 @@
 extends ../main
 
+mixin modalAdd()
+    div(class="modal fade" id="addQuizModal" tabindex="-1" role="dialog" aria-labelledby="addQuizModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="addQuizModalLabel")='Add Quiz'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Quiz.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="addNameInput")='Name'
+                        input(type="text" class="form-control" id="addNameInput" aria-describedby="addNameHelp" placeholder="Enter name")
+                        small(id="addNameHelp" class="form-text text-muted")
+                            | Enter the Quiz Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="addCodeInput")='Code'
+                        input(type="text" class="form-control" id="addCodeInput" aria-describedby="addCodeHelp" placeholder="Enter code")
+                        small(id="addCodeHelp" class="form-text text-muted")
+                            | Enter the Quiz Code. Try to make it unique.
+
+                    div(class="form-group form-check")
+                        input(type="checkbox" class="form-check-input" id="addOpenCheckbox" aria-describedby="addOpenHelp")
+                        label(class="form-check-label" for="addOpenCheckbox")='Open'
+                        small(id="addOpenHelp" class="form-text text-muted")
+                            | Check when the Quiz is open to students.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="addQuizModalSave" class="btn btn-primary")='Add Quiz'
+
+
+mixin modalEdit()
+    div(class="modal fade" id="editQuizModal" tabindex="-1" role="dialog" aria-labelledby="editQuizModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="editQuizModalLabel")='Edit Quiz'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Quiz.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="editNameInput")='Name'
+                        input(type="text" class="form-control" id="editNameInput" aria-describedby="editNameHelp" placeholder="Enter name")
+                        small(id="editNameHelp" class="form-text text-muted")
+                            | Enter the Quiz Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="editCodeInput")='Code'
+                        input(type="text" class="form-control" id="editCodeInput" aria-describedby="editCodeHelp" placeholder="Enter code")
+                        small(id="editCodeHelp" class="form-text text-muted")
+                            | Enter the Quiz Code. Try to make it unique.
+
+                    div(class="form-group form-check")
+                        input(type="checkbox" class="form-check-input" id="editOpenCheckbox" aria-describedby="editOpenHelp")
+                        label(class="form-check-label" for="editOpenCheckbox")='Open'
+                        small(id="editOpenHelp" class="form-text text-muted")
+                            | Check when the Quiz is open to students.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="editQuizModalSave" class="btn btn-primary")='Save changes'
+
+
+mixin modalRemove()
+    div(class="modal fade" id="removeQuizModal" tabindex="-1" role="dialog" aria-labelledby="removeQuizModalLabel" aria-hidden="true")
+        div(class="modal-dialog" role="document")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="removeQuizModalLabel")='Remove Quiz'
+                    button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true")
+                            | &times;
+                div(class="modal-body")
+                    div(class="alert alert-warning alert-dismissible fade show d-none" role="alert")
+                        strong
+                            | Something went wrong!
+                        | Fail to save the Quiz.
+                        button(type="button" class="close" data-hide="alert" aria-label="Close")
+                           span(aria-hidden="true")
+                                | &times;
+
+                    div(class="form-group")
+                        label(for="removeNameInput")='Name'
+                        input(type="text" class="form-control" id="removeNameInput" aria-describedby="removeNameHelp" placeholder="Enter name" readonly)
+                        small(id="removeNameHelp" class="form-text text-muted")
+                            | Enter the Quiz Name. Try to make it unique.
+
+                    div(class="form-group")
+                        label(for="removeCodeInput")='Code'
+                        input(type="text" class="form-control" id="removeCodeInput" aria-describedby="removeCodeHelp" placeholder="Enter code" readonly)
+                        small(id="removeCodeHelp" class="form-text text-muted")
+                            | Enter the Quiz Code. Try to make it unique.
+
+                    div(class="form-group form-check")
+                        input(type="checkbox" class="form-check-input" id="removeOpenCheckbox" aria-describedby="removeOpenHelp" readonly)
+                        label(class="form-check-label" for="removeOpenCheckbox")='Open'
+                        small(id="removeOpenHelp" class="form-text text-muted")
+                            | Check when the Quiz is open to students.
+
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal")='Close'
+                    button(type="button" id="removeQuizModalSave" class="btn btn-primary")='Remove Quiz'
+
 block content
-    h1(class='text-center mb-4')='Quiz Results'
-    div(class="container")
-        div(class="row")
-            if $items.sessions
-                div(class="col-3 text-right")
-                    span='Choose a session: '
-                div(class="col-3")
-                    div(class="ml-5 dropdown")
-                        button(class="btn btn-secondary dropdown-toggle" type="button" id="sessionSropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")='Sessions'
-                        div(class="dropdown-menu" aria-labelledby="sessionSropdownButton")
-                            each $session in $items.sessions
-                                - $href=$items['baseUrl'] . '/admin/results/session/' . $session->getId()
-                                - $class='dropdown-item'
-                                if (array_key_exists('session', $items) && $session->getId() === $items['session']->getId())
-                                    - $class .= ' active'
-                                a(class=$class href=$href)=$session.name
+    h3(class='text-center mb-4')='Quizs'
+    - $href=$items['baseUrl'] . '/admin/quizzes/add'
+    p(class='text-center')
+        | New Quiz:
+        a(href='#' class='green ml-2' data-toggle='modal' data-target='#addQuizModal')
+            i(class='fas fa-plus-circle')
 
-            if $items.session
-                div(class="col-3 text-right")
-                    span='Choose a quiz: '
-                div(class="col-3")
-                    div(class="ml-5 dropdown")
-                        button(class="btn btn-secondary dropdown-toggle" type="button" id="sessionSropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")='Quizzes'
-                        div(class="dropdown-menu" aria-labelledby="sessionSropdownButton")
-                            each $quiz in $items.session.quizzes
-                                - $href=$items['baseUrl'] . '/admin/results/session/' . $items['session']->getId() . '/quiz/' . $quiz->getId()
-                                - $class='dropdown-item'
-                                if (array_key_exists('quiz', $items) && $quiz->getId() === $items['quiz']->getId())
-                                    - $class .= ' active'
-                                a(class=$class href=$href)=$quiz.name
-
-    if $items.quiz
-        h3(class='text-center mb-4')=$items.quiz.name
+    if $items.allQuizzes
         div(class="container mt-5")
             table(class="table table-striped table-sm")
                 thead
                     tr
                     th(scope="col")='#'
-                    th(scope="col")='Lastname'
-                    th(scope="col")='Firstname'
-                    th(scope="col")='Mark'
+                    th(width='50%' scope="col")='Name'
+                    th(width='20%' scope="col")='Open'
+                    th(scope="col")='Action'
                 tbody
-                    each $userQuiz, $index in $items.quiz.userQuizzes
+                    each $quiz, $index in $items.allQuizzes
                         tr
                             th(scope="row")=$index
-                            td=$userQuiz.user.lastname
-                            td=$userQuiz.user.firstname
-                            td=$userQuiz.goodAnswerCount
-
-
+                            td=$quiz.name
+                            td
+                                if $quiz.open === true
+                                    span(class="green")
+                                        i(class="fas fa-toggle-on")
+                                else
+                                    span(class="red")
+                                        i(class="fas fa-toggle-off")
+                            td
+                                - $name= $quiz->getName()
+                                - $code= $quiz->getCode()
+                                - $open= $quiz->getOpen() === true ? "true" : "false"
+                                - $id= $quiz->getId()
+                                a(href='#' class='mr-2' data-toggle='modal' data-target='#editQuizModal' data-name=$name data-code=$code data-open=$open data-id=$id)
+                                    i(class='fas fa-edit')
+                                a(href='#' class='red' data-toggle='modal' data-target='#removeQuizModal' data-name=$name data-code=$code data-open=$open data-id=$id)
+                                    i(class='far fa-times-circle')
+    +modalAdd()
+    +modalEdit()
+    +modalRemove()
+    div(class="loading")
+        div(class="loader")
 
 block css
-    - $href=$items['baseUrl'] . '/css/password.css'
+    - $href=$items['baseUrl'] . '/css/administration.css'
     link(rel='stylesheet' href=$href crossorigin='anonymous')
+    link( rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous')
 
+block jscript
+    - $script=$items['baseUrl'] . '/js/quizzes.js'
+    script(src=$script crossorigin='anonymous')
 
 //-
 //- Copyright 2018 the original author or authors.
