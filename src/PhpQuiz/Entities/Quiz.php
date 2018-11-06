@@ -53,6 +53,11 @@ class Quiz
      */
     protected $open;
     /**
+     * @Column(type="integer", name="questions_count")
+     * @var int
+     */
+    protected $questionsCount;
+    /**
      * @OneToMany(targetEntity="Question", mappedBy="quiz", orphanRemoval=true)
      * @var Question[] An ArrayCollection of Question objects.
      **/
@@ -89,6 +94,16 @@ class Quiz
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getQuestionsCount()
+    {
+        return $this->questionsCount;
+    }
+
+    public function setQuestionsCount($questionsCount)
+    {
+        $this->questionsCount = $questionsCount;
     }
 
     public function getCode()

@@ -122,7 +122,7 @@ class QuizController extends AbstractController
 
     private function getQuestions($quiz)
     {
-        $quizIds = array_rand($quiz->getQuestions()->toArray(), 10);
+        $quizIds = array_rand($quiz->getQuestions()->toArray(), $quiz->getQuestionsCount());
         $questions = array();
         foreach ($quizIds as $quizId) {
             array_push($questions, $quiz->getQuestions()->toArray()[$quizId]);

@@ -148,15 +148,16 @@ CREATE TABLE `quiz` (
   `session_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `open` tinyint(1) NOT NULL
+  `open` tinyint(1) NOT NULL,
+  `questions_count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `quiz`
 --
 
-INSERT INTO `quiz` (`id`, `session_id`, `name`, `code`, `open`) VALUES
-(1, 1, 'HTML Quiz', 'HTML', 1);
+INSERT INTO `quiz` (`id`, `session_id`, `name`, `code`, `open`, `questions_count`) VALUES
+(1, 1, 'HTML Quiz', 'HTML', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -233,7 +234,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `workgroup_id`, `session_id`, `role_id`, `lastname`, `firstname`, `email`, `login`, `password`) VALUES
-(1, NULL, NULL, 1, 'admin', 'admin', 'admin@admin.com', 'admin', '810247419084c82d03809fc886fedaad'),
+(1, NULL, NULL, 1, 'admin', 'admin', 'admin@admin.com', 'admin', 'pxwLUp0iSuTYM'),
 (2, NULL, 1, 2, 'test', 'test', 'test@test.com', 'test', '098f6bcd4621d373cade4e832627b4f6');
 
 -- --------------------------------------------------------
