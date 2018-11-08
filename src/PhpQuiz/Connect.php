@@ -30,7 +30,7 @@ class Connect
 
     public function __construct()
     {
-        $isDevMode = $_SESSION['config']['general']['devMode'];
+        $isDevMode = $_SESSION['config']['orm']['devMode'];
         $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__.'/src'), $isDevMode);
 
         if ($_SESSION['config']['orm']['useArrayCache']) {

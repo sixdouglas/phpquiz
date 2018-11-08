@@ -19,6 +19,7 @@ namespace PhpQuiz;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\FileCacheReader;
 use PhpQuiz\Controllers\Router;
 use ReflectionClass;
 use ReflectionMethod;
@@ -69,7 +70,15 @@ class Application
 
     private function fillActions($controllers)
     {
-        $reader = new AnnotationReader();
+        if ($_SESSION['config']['annotation']['useCache']) {
+            $reader = new FileCacheReader(
+                new AnnotationReader(),
+                $_SESSION['config']['annotation']['cacheDir'],
+                $debug = true
+            );
+        } else {
+            $reader = new AnnotationReader();
+        }
         foreach ($controllers as $key => $controller) {
             $reflectionClass = new ReflectionClass($controller);
             $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
@@ -118,7 +127,15 @@ class Application
 
     private function renderPath($vars)
     {
-        $pug = new \Pug();
+        if ($_SESSION['config']['pug']['useCache']) {
+            $pug = new \Pug(array(
+                'cache' => $_SESSION['config']['pug']['cacheDir'],
+                'basedir' => $_SESSION['config']['pug']['baseDir'],
+                'upToDateCheck' => $_SESSION['config']['pug']['upToDateCheck'],
+            ));
+        } else {
+            $pug = new \Pug();
+        }
         $pug->setOption('paths', [
             $this->srcPath,
         ]);
