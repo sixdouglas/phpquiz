@@ -22,52 +22,44 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="PhpQuiz\Repositories\AnswerRepository")
- * @Table(name="answer")
+ * @Entity(repositoryClass="PhpQuiz\Repositories\UserQuizQuestionRepository")
+ * @Table(name="user_quiz_question")
  */
-class Answer
+class UserQuizQuestion
 {
     /**
      * @Id @GeneratedValue @Column(type="integer")
-     *
      * @var int
      */
     protected $id;
-    /**
-     * @Column(type="string")
-     *
-     * @var string
-     */
-    protected $name;
-    /**
-     * @Column(type="string")
-     *
-     * @var string
-     */
-    protected $text;
-    /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $good;
-    /**
-     * @Column(type="string")
-     *
-     * @var string
-     */
-    protected $reason;
 
     /**
-     * @ManyToOne(targetEntity="Question", inversedBy="answers")
+     * @Column(type="bigint")
+     * @var bigint
+     */
+    protected $date;
+
+    /**
+     * @ManyToOne(targetEntity="UserQuiz", inversedBy="userQuizQuestions")
+     * @JoinColumn(name="user_quiz_id", referencedColumnName="id", nullable=true)
+     **/
+    protected $userQuiz;
+
+    /**
+     * @ManyToOne(targetEntity="Question", inversedBy="userQuizQuestions")
+     * @JoinColumn(name="question_id", referencedColumnName="id", nullable=true)
      **/
     protected $question;
 
     /**
-     * @OneToMany(targetEntity="UserQuizQuestionAnswer", mappedBy="answer", orphanRemoval=true)
+     * @OneToMany(targetEntity="UserQuizQuestionAnswer", mappedBy="userQuizQuestion", orphanRemoval=true)
      * @var UserQuizQuestionAnswer[] An ArrayCollection of UserQuizQuestionAnswer objects.
      **/
     protected $userQuizQuestionAnswers;
@@ -85,44 +77,24 @@ class Answer
         return $this->id;
     }
 
-    public function getName()
+    public function setCreationDate($time)
     {
-        return $this->name;
+        $this->date = $time;
     }
 
-    public function setName($name)
+    public function getCreationDate()
     {
-        $this->name = $name;
+        return $this->date;
     }
 
-    public function getText()
+    public function getUserQuiz()
     {
-        return $this->text;
+        return $this->userQuiz;
     }
 
-    public function setText($text)
+    public function setUserQuiz($userQuiz)
     {
-        $this->text = $text;
-    }
-
-    public function isGood()
-    {
-        return $this->good;
-    }
-
-    public function setGood($good)
-    {
-        $this->good = $good;
-    }
-
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
+        $this->userQuiz = $userQuiz;
     }
 
     public function getQuestion()
@@ -133,16 +105,6 @@ class Answer
     public function setQuestion($question)
     {
         $this->question = $question;
-    }
-
-    /**
-     * Get good.
-     *
-     * @return bool
-     */
-    public function getGood()
-    {
-        return $this->good;
     }
 
     public function getUserQuizQuestionAnswers()
@@ -156,12 +118,35 @@ class Answer
     }
 
     /**
+     * Set date
+     *
+     * @param bigint $date
+     * @return UserQuizAnswer
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return bigint $date
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
      * Add userQuizQuestionAnswer
      *
      * @param \PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer
      * @return UserQuizQuestion
      */
-    public function addUserQuizQuestionAnswer(\PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer)
+    public function addUserQuizQuestionAnswers(\PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer)
     {
         $this->userQuizQuestionAnswers[] = $userQuizQuestionAnswer;
 
@@ -173,7 +158,7 @@ class Answer
      *
      * @param \PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer
      */
-    public function removeUserQuizQuestionAnswer(\PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer)
+    public function removeUserQuizQuestionAnswers(\PhpQuiz\Entities\UserQuizQuestionAnswer $userQuizQuestionAnswer)
     {
         $this->userQuizQuestionAnswers->removeElement($userQuizQuestionAnswer);
     }

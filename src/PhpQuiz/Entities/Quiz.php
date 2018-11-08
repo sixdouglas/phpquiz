@@ -68,7 +68,7 @@ class Quiz
      **/
     protected $userQuizzes = null;
     /**
-     * @ManyToOne(targetEntity="Session", inversedBy="quiz")
+     * @ManyToOne(targetEntity="Session", inversedBy="quizzes")
      **/
     protected $session;
 

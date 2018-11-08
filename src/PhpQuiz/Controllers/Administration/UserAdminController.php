@@ -20,15 +20,18 @@ namespace PhpQuiz\Controllers\Administration;
 use PhpQuiz\Controllers\AbstractController;
 use PhpQuiz\Controllers\Router;
 use PhpQuiz\Model\UserModel;
+use PhpQuiz\Services\SessionService;
 use PhpQuiz\Services\UserService;
 
 class UserAdminController extends AbstractController
 {
+    protected $sessionService;
     protected $userService;
 
     public function __construct()
     {
         parent::__construct();
+        $this->sessionService = new SessionService();
         $this->userService = new UserService();
     }
 
@@ -84,5 +87,10 @@ class UserAdminController extends AbstractController
     private function doSaveUsers()
     {
         $this->userService->saveUsers($_POST['session'], $_POST['users']);
+    }
+
+    private function getSessions()
+    {
+        return $this->sessionService->getSessions();
     }
 }

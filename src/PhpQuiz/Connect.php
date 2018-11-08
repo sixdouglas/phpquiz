@@ -19,6 +19,10 @@ namespace PhpQuiz;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
+//use Doctrine\ORM\Cache\DefaultCacheFactory;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\ApcCache;
 
 class Connect
 {
@@ -28,6 +32,31 @@ class Connect
     {
         $isDevMode = $_SESSION['config']['general']['devMode'];
         $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__.'/src'), $isDevMode);
+
+        if ($_SESSION['config']['orm']['useArrayCache']) {
+            $cache = new ArrayCache;
+        } else {
+            $cache = new ApcCache;
+        }
+
+        $config->setMetadataCacheImpl($cache);
+        $config->setQueryCacheImpl($cache);
+        $config->setProxyDir($_SESSION['config']['orm']['proxyDir']);
+        $config->setProxyNamespace('PhpQuiz\Proxies');
+
+        if ($_SESSION['config']['orm']['logQuery']) {
+            $logger = new EchoSQLLogger;
+            $config->setSQLLogger($logger);
+        }
+
+        //$factory = new DefaultCacheFactory($config, $cache);
+
+        // Enable second-level-cache
+        //$config->setSecondLevelCacheEnabled();
+        
+        // Cache factory
+        //$config->getSecondLevelCacheConfiguration()->setCacheFactory($factory);
+
 
         // database configuration parameters
         $conn = array(

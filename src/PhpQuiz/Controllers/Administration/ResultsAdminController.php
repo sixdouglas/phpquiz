@@ -141,4 +141,14 @@ class ResultsAdminController extends AbstractController
     {
         $this->userService->saveUsers($_POST['session'], $_POST['users']);
     }
+
+    private function getSessions()
+    {
+        return $this->sessionService->getSessions();
+    }
+
+    private function getSession($sessionId)
+    {
+        return $this->sessionService->getSession($sessionId);
+    }
 }

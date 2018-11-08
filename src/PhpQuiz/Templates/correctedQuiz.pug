@@ -1,9 +1,8 @@
-mixin quiz($quiz, $userAnswers, $user)
-    h1=$quiz.name
+mixin quiz($quiz, $userQuizQuestions, $user)
     - $cpt = 1
 
-    each $userAnswer in $userAnswers
-        - $question = $userAnswer->getAnswer()->getQuestion()
+    each $userQuizQuestion in $userQuizQuestions
+        - $question = $userQuizQuestion->getQuestion()
         - $questionLabel = '' . $cpt . ' - ' . $question->getName()
         h3=$questionLabel
         each $answer in $question.answers
@@ -11,19 +10,26 @@ mixin quiz($quiz, $userAnswers, $user)
             - $checkId = 'check_' . $answer->getId()
             - $label = $answer->getName()
             - $value = $answer->getId()
-            - $isUsersChoice = $answer->getId() === $userAnswer->getAnswer()->getId()
+            - $isUsersChoice = false // $answer->getId() === $userQuizQuestion->getQuizQuestion()->getId()
+            each $userAnswer in $userQuizQuestion.userQuizQuestionAnswers
+                if $answer->getId() === $userAnswer->getAnswer()->getId()
+                    - $isUsersChoice = true
             - $groupClass = 'form-group'
             if $answer->isGood()
                 - $groupClass .= ' good'
             div(class=$groupClass)
-                input(type='radio' class='form-check-input' disabled)(name=$checkName)(id=$checkId)(value=$value)(checked=$isUsersChoice)
+                if ($question.multiple)
+                    input(type="checkbox" class="form-check-input" disabled)(name=$checkName)(id=$checkId)(value=$value)(checked=$isUsersChoice)
+                else
+                    input(type="radio" class="form-check-input" disabled)(name=$checkName)(id=$checkId)(value=$value)(checked=$isUsersChoice)
+
                 label(for=$checkId)=$label
                 |
                 if ($answer->isGood() && $isUsersChoice)
-                    span(class='badge badge-success')='Right Answer'
+                    span(class='badge badge-success')='Right answer'
                 else
                     if $isUsersChoice
-                        span(class='badge badge-danger')='Wrong Answer'
+                        span(class='badge badge-danger')='Wrong answer'
                 if strlen($answer.text) > 0
                     p=$answer.text
         - $cpt++
@@ -36,11 +42,16 @@ block css
 
 block content
     div.container
-        - $userquiz=$items['userQuiz']
-        - $quiz=$userquiz->getQuiz()
-        - $userAnswers=$userquiz->getUserQuizAnswers()
+        - $userQuiz=$items['userQuiz']
+        - $quiz=$userQuiz->getQuiz()
+        - $userQuizQuestions=$userQuiz->getUserQuizQuestions()
         - $user=$items['user']
-        +quiz($quiz, $userAnswers, $user)
+
+        h2(class="mark")="Your mark is: "
+            span=$userQuiz.goodAnswerCount
+        h1=$quiz.name
+
+        +quiz($quiz, $userQuizQuestions, $user)
 
 
 //-

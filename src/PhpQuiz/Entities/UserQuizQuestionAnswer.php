@@ -26,12 +26,13 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="PhpQuiz\Repositories\UserQuizAnswerRepository")
- * @Table(name="user_quiz_answer")
+ * @Entity(repositoryClass="PhpQuiz\Repositories\UserQuizQuestionAnswerRepository")
+ * @Table(name="user_quiz_question_answer")
  */
-class UserQuizAnswer
+class UserQuizQuestionAnswer
 {
     /**
      * @Id @GeneratedValue @Column(type="integer")
@@ -46,13 +47,13 @@ class UserQuizAnswer
     protected $date;
 
     /**
-     * @ManyToOne(targetEntity="UserQuiz")
-     * @JoinColumn(name="user_quiz_id", referencedColumnName="id", nullable=true)
+     * @ManyToOne(targetEntity="UserQuizQuestion", inversedBy="userQuizQuestionAnswers")
+     * @JoinColumn(name="user_quiz_question_id", referencedColumnName="id", nullable=true)
      **/
-    protected $userQuiz;
+    protected $userQuizQuestion;
 
     /**
-     * @ManyToOne(targetEntity="Answer")
+     * @ManyToOne(targetEntity="Answer", inversedBy="userQuizQuestionAnswers")
      * @JoinColumn(name="answer_id", referencedColumnName="id", nullable=true)
      **/
     protected $answer;
@@ -62,22 +63,24 @@ class UserQuizAnswer
         return $this->id;
     }
 
-    public function setCreationDate($time){
+    public function setCreationDate($time)
+    {
         $this->date = $time;
     }
 
-    public function getCreationDate(){
+    public function getCreationDate()
+    {
         return $this->date;
     }
 
-    public function getUserQuiz()
+    public function getUserQuizQuestion()
     {
-        return $this->userQuiz;
+        return $this->userQuizQuestion;
     }
 
-    public function setUserQuiz($userQuiz)
+    public function setUserQuizQuestion($userQuizQuestion)
     {
-        $this->userQuiz = $userQuiz;
+        $this->userQuizQuestion = $userQuizQuestion;
     }
 
     public function getAnswer()

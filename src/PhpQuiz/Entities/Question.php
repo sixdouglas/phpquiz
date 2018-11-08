@@ -48,6 +48,17 @@ class Question
      */
     protected $text;
     /**
+     * @Column(type="boolean")
+     * @var boolean
+     */
+    protected $multiple;
+    /**
+     * @OneToMany(targetEntity="UserQuizQuestion", mappedBy="question", orphanRemoval=true)
+     *
+     * @var UserQuizQuestion[] an ArrayCollection of UserQuizQuestion objects
+     **/
+    protected $userQuizQuestions = null;
+    /**
      * @OneToMany(targetEntity="Answer", mappedBy="question", orphanRemoval=true)
      * @var Anwser[] An ArrayCollection of Answer objects.
      **/
@@ -62,6 +73,7 @@ class Question
      */
     public function __construct()
     {
+        $this->userQuizAnswers = new ArrayCollection();
         $this->answers = new ArrayCollection();
     }
 
@@ -90,6 +102,16 @@ class Question
         $this->text = $text;
     }
 
+    public function getMultiple()
+    {
+        return $this->multiple;
+    }
+
+    public function setMultiple($multiple)
+    {
+        $this->multiple = $multiple;
+    }
+
     public function getQuiz()
     {
         return $this->quiz;
@@ -100,6 +122,16 @@ class Question
         $this->quiz = $quiz;
     }
 
+    public function getUserQuizQuestions()
+    {
+        return $this->userQuizQuestions;
+    }
+
+    public function setUserQuizQuestions($userQuizQuestions)
+    {
+        $this->userQuizQuestions = $userQuizQuestions;
+    }
+
     public function getAnswers()
     {
         return $this->answers;
@@ -108,6 +140,30 @@ class Question
     public function setAnswers($answers)
     {
         $this->answers = $answers;
+    }
+
+    /**
+     * Add userQuizQuestion.
+     *
+     * @param \PhpQuiz\Entities\UserQuizQuestion $userQuizQuestion
+     *
+     * @return UserQuiz
+     */
+    public function addUserQuizQuestion(\PhpQuiz\Entities\UserQuizQuestion $userQuizQuestion)
+    {
+        $this->userQuizQuestions[] = $userQuizQuestion;
+
+        return $this;
+    }
+
+    /**
+     * Remove userQuizQuestion.
+     *
+     * @param \PhpQuiz\Entities\UserQuizQuestion $userQuizQuestion
+     */
+    public function removeUserQuizQuestion(\PhpQuiz\Entities\UserQuizQuestion $userQuizQuestion)
+    {
+        $this->userQuizQuestions->removeElement($userQuizQuestion);
     }
 
     /**

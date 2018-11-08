@@ -19,21 +19,27 @@ namespace PhpQuiz\Services;
 
 use PhpQuiz\Connect;
 use PhpQuiz\Entities\UserQuiz;
-use PhpQuiz\Entities\UserQuizAnswer;
+use PhpQuiz\Entities\UserQuizQuestion;
+use PhpQuiz\Entities\UserQuizQuestionAnswer;
+use Doctrine\ORM\ORMInvalidArgumentException;
 
 class UserQuizService
 {
     protected $entityManager;
     protected $answerService;
     protected $quizService;
+    protected $questionService;
     protected $userQuizRepository;
+    protected $userQuizQuestionRepository;
 
     public function __construct()
     {
         $connect = new Connect();
         $this->entityManager = $connect->getEntityManager();
         $this->userQuizRepository = $this->entityManager->getRepository(UserQuiz::class);
+        $this->userQuizQuestionRepository = $this->entityManager->getRepository(UserQuizQuestion::class);
         $this->answerService = new AnswerService();
+        $this->questionService = new QuestionService();
         $this->quizService = new QuizService();
     }
 
@@ -88,20 +94,67 @@ class UserQuizService
             $goodAnswerCount = 0;
 
             foreach ($answers as $key => $value) {
-                $userQuizAnswer = new UserQuizAnswer();
-                $userQuizAnswer->setDate(time());
-                $answer = $this->answerService->getAnswer($value);
-                if ($answer->isGood()) {
-                    ++$goodAnswerCount;
-                }
-                $userQuizAnswer->setAnswer($answer);
-                $userQuizAnswer->setUserQuiz($userQuiz);
+                $userQuizQuestion = new UserQuizQuestion();
+                $userQuizQuestion->setDate(time());
+                $questionId = ltrim($key, 'check_');
+                $question = $this->questionService->getQuestion($questionId);
 
-                $this->entityManager->merge($userQuizAnswer);
+                $userQuizQuestion->setQuestion($question);
+                $userQuizQuestion->setUserQuiz($userQuiz);
+
+                $userQuizQuestion = $this->entityManager->merge($userQuizQuestion);
+
+                if (is_array($value)) {
+                    $questionMultipleGoodAnswerCount = $this->questionService->getQuestionGoodAnswerCount($question);
+                    $multipleGoodAnswerCount = 0;
+                    foreach ($value as $currentValue) {
+                        $answer = $this->answerService->getAnswer($currentValue);
+
+                        if ($answer->isGood()) {
+                            $multipleGoodAnswerCount++;
+                        }
+                    }
+
+                    if ($questionMultipleGoodAnswerCount === $multipleGoodAnswerCount && $questionMultipleGoodAnswerCount === count($value)) {
+                        $goodAnswerCount++;
+                    }
+                } else {
+                    $answer = $this->answerService->getAnswer($value);
+
+                    if ($answer->isGood()) {
+                        $goodAnswerCount++;
+                    }
+                }
             }
 
             $userQuiz->setGoodAnswerCount($goodAnswerCount);
-            $this->entityManager->persist($userQuiz);
+            $userQuiz = $this->entityManager->merge($userQuiz);
+            $this->entityManager->flush();
+
+            foreach ($answers as $key => $value) {
+                $questionId = ltrim($key, 'check_');
+                $question = $this->questionService->getQuestion($questionId);
+                $userQuizQuestion = $this->userQuizQuestionRepository->getUserQuizQuestion($userQuiz, $question);
+
+                if (is_array($value)) {
+                    foreach ($value as $currentValue) {
+                        $answer = $this->answerService->getAnswer($currentValue);
+                        $userQuizQuestionAnswer = new UserQuizQuestionAnswer();
+                        $userQuizQuestionAnswer->setDate(time());
+                        $userQuizQuestionAnswer->setAnswer($answer);
+                        $userQuizQuestionAnswer->setUserQuizQuestion($userQuizQuestion);
+                        $this->entityManager->merge($userQuizQuestionAnswer);
+                    }
+                } else {
+                    $answer = $this->answerService->getAnswer($value);
+                    $userQuizQuestionAnswer = new UserQuizQuestionAnswer();
+                    $userQuizQuestionAnswer->setDate(time());
+                    $userQuizQuestionAnswer->setAnswer($answer);
+                    $userQuizQuestionAnswer->setUserQuizQuestion($userQuizQuestion);
+                    $this->entityManager->merge($userQuizQuestionAnswer);
+                }
+            }
+
             $this->entityManager->flush();
         }
     }
@@ -116,17 +169,38 @@ class UserQuizService
      */
     private function validateAnswers($quiz, $answers)
     {
-        foreach ($answers as $key => $value) {
+        foreach ($answers as $key => $answerId) {
             $questionId = ltrim($key, 'check_');
-            $answerId = $value;
-            if ($this->quizService->isNotPossibleAnswer($quiz, $questionId, $answerId)) {
-                throw new Exception('Answer: '.$answerId.' is not valid for the question '.$questionId
-                    .' and quiz '.$quiz->getId());
-
-                return false;
+            if (is_array($answerId)) {
+                $question = $this->questionService->getQuestion($questionId);
+                if (!$question->getMultiple()) {
+                    return false;
+                }
+                foreach ($answerId as $currenAnswerId) {
+                    $returnValue = $this->validateAnswer($quiz, $questionId, $currenAnswerId);
+                    if (!$returnValue) {
+                        return false;
+                    }
+                }
+            } else {
+                $returnValue = $this->validateAnswer($quiz, $questionId, $answerId);
+                if (!$returnValue) {
+                    return false;
+                }
             }
         }
 
+        return true;
+    }
+
+    private function validateAnswer($quiz, $questionId, $answerId)
+    {
+        if ($this->quizService->isNotPossibleAnswer($quiz, $questionId, $answerId)) {
+            error_log('Answer: '.$answerId.' is not valid for the question '.$questionId
+                .' and quiz '.$quiz->getId());
+
+            return false;
+        }
         return true;
     }
 }

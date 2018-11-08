@@ -47,3 +47,11 @@ label {
 .form-check-input {
     margin-top: .6rem;
 }
+.mark {
+    float: right;
+    margin: .8rem;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important;
+}
+.mark span {
+    color: rgb(51, 155, 68);
+}

@@ -147,8 +147,20 @@ class QuizController extends AbstractController
     {
         $answers = array();
         foreach ($_POST as $key => $value) {
+            // $key is formed like this 'check_questionID_answerID'
             if (strpos($key, 'check_') === 0) {
-                $answers[$key] = $value;
+                $ids = explode('_', $key);
+
+                if (array_key_exists($ids[1], $answers)) {
+                    $tempValue = $answers[$ids[1]];
+                    if (is_array($tempValue)) {
+                        array_push($answers, $value);
+                    } else {
+                        $answers[$ids[1]] = array($tempValue, $value);
+                    }
+                } else {
+                    $answers[$ids[1]] = $value;
+                }
             }
         }
         $quiz = $this->quizService->getQuiz($quizId);
