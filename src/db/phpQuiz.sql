@@ -1,25 +1,9 @@
-/*
- * Copyright 2018 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 -- phpMyAdmin SQL Dump
 -- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le :  Dim 28 oct. 2018 à 18:29
+-- Généré le :  lun. 12 nov. 2018 à 20:55
 -- Version du serveur :  5.7.24-0ubuntu0.18.04.1-log
 -- Version de PHP :  7.2.10-0ubuntu0.18.04.1
 
@@ -50,7 +34,7 @@ CREATE TABLE `answer` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `text` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `good` tinyint(1) NOT NULL,
-  `reason` text COLLATE utf8_unicode_ci NOT NULL
+  `reason` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -115,28 +99,28 @@ CREATE TABLE `question` (
   `id` int(11) NOT NULL,
   `quiz_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `text` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-  `multiple` tinyint(1) NOT NULL,
+  `text` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `multiple` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `question`
 --
 
-INSERT INTO `question` (`id`, `quiz_id`, `name`, `text`) VALUES
-(1, 1, 'What does HTML stand for?', ''),
-(2, 1, 'Who is making the Web standards?', ''),
-(3, 1, 'Choose the correct HTML element for the largest heading', ''),
-(4, 1, 'What is the correct HTML element for inserting a line break?', ''),
-(5, 1, 'What is the correct HTML for adding a background color?', ''),
-(6, 1, 'To access a file on local, do you use?', ''),
-(7, 1, 'Where do you put these tags?', '<meta charset=\"utf-8\"> \r\n<title>Techno web module</title>'),
-(8, 1, 'Which character is used to indicate an end tag?', ''),
-(9, 1, 'What is the tag for the paragraphe', ''),
-(10, 1, 'In a table, what is the tag for a row?', ''),
-(11, 1, 'In a table, how do you merge cells horizontally?', ''),
-(12, 1, 'In a table, how do you merge cells vertically?', ''),
-(13, 1, 'Which of these elements are all <table> elements?', '');
+INSERT INTO `question` (`id`, `quiz_id`, `name`, `text`, `multiple`) VALUES
+(1, 1, 'What does HTML stand for?', '', 1),
+(2, 1, 'Who is making the Web standards?', '', 0),
+(3, 1, 'Choose the correct HTML element for the largest heading', '', 0),
+(4, 1, 'What is the correct HTML element for inserting a line break?', '', 0),
+(5, 1, 'What is the correct HTML for adding a background color?', '', 0),
+(6, 1, 'To access a file on local, do you use?', '', 0),
+(7, 1, 'Where do you put these tags?', '<meta charset=\"utf-8\"> \r\n<title>Techno web module</title>', 0),
+(8, 1, 'Which character is used to indicate an end tag?', '', 0),
+(9, 1, 'What is the tag for the paragraphe', '', 0),
+(10, 1, 'In a table, what is the tag for a row?', '', 0),
+(11, 1, 'In a table, how do you merge cells horizontally?', '', 0),
+(12, 1, 'In a table, how do you merge cells vertically?', '', 0),
+(13, 1, 'Which of these elements are all <table> elements?', '', 0);
 
 -- --------------------------------------------------------
 
@@ -197,20 +181,8 @@ CREATE TABLE `session` (
 --
 
 INSERT INTO `session` (`id`, `name`, `code`) VALUES
-(1, '2018 session', '2018');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `solution`
---
-
-CREATE TABLE `solution` (
-  `id` int(11) NOT NULL,
-  `question_id` int(11) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `text` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(1, '2018 session', '2018'),
+(3, '2018 CIR A', '2018_CIR_A');
 
 -- --------------------------------------------------------
 
@@ -246,23 +218,36 @@ INSERT INTO `user` (`id`, `workgroup_id`, `session_id`, `role_id`, `lastname`, `
 
 CREATE TABLE `user_quiz` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `quiz_id` int(11) NOT NULL,
-  `date` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `quiz_id` int(11) DEFAULT NULL,
+  `date` bigint(20) NOT NULL,
   `good_answer_count` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user_quiz_answer`
+-- Structure de la table `user_quiz_question`
 --
 
-CREATE TABLE `user_quiz_answer` (
+CREATE TABLE `user_quiz_question` (
   `id` int(11) NOT NULL,
-  `date` bigint(20) UNSIGNED NOT NULL,
-  `user_quiz_id` int(11) NOT NULL,
-  `answer_id` int(11) NOT NULL
+  `date` bigint(20) NOT NULL,
+  `user_quiz_id` int(11) DEFAULT NULL,
+  `question_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_quiz_question_answer`
+--
+
+CREATE TABLE `user_quiz_question_answer` (
+  `id` int(11) NOT NULL,
+  `user_quiz_question_id` int(11) DEFAULT NULL,
+  `answer_id` int(11) DEFAULT NULL,
+  `date` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -286,21 +271,21 @@ CREATE TABLE `workgroup` (
 --
 ALTER TABLE `answer`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_DADD4A251E27F6BF` (`question_id`);
+  ADD KEY `answer_idx1` (`question_id`);
 
 --
 -- Index pour la table `question`
 --
 ALTER TABLE `question`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_B6F7494E853CD175` (`quiz_id`);
+  ADD KEY `question_idx1` (`quiz_id`);
 
 --
 -- Index pour la table `quiz`
 --
 ALTER TABLE `quiz`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_A412FA92613FECDF` (`session_id`);
+  ADD KEY `quiz_idx1` (`session_id`);
 
 --
 -- Index pour la table `role`
@@ -315,36 +300,37 @@ ALTER TABLE `session`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `solution`
---
-ALTER TABLE `solution`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UNIQ_9F3329DB1E27F6BF` (`question_id`);
-
---
 -- Index pour la table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_8D93D6495FD78018` (`workgroup_id`),
-  ADD KEY `IDX_8D93D649613FECDF` (`session_id`),
-  ADD KEY `IDX_8D93D649D60322AC` (`role_id`);
+  ADD KEY `user_idx1` (`workgroup_id`),
+  ADD KEY `user_idx2` (`session_id`),
+  ADD KEY `user_idx3` (`role_id`);
 
 --
 -- Index pour la table `user_quiz`
 --
 ALTER TABLE `user_quiz`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_quiz_fk1` (`user_id`),
-  ADD KEY `user_quiz_fk2` (`quiz_id`);
+  ADD KEY `user_quiz_idx1` (`user_id`),
+  ADD KEY `user_quiz_idx2` (`quiz_id`);
 
 --
--- Index pour la table `user_quiz_answer`
+-- Index pour la table `user_quiz_question`
 --
-ALTER TABLE `user_quiz_answer`
+ALTER TABLE `user_quiz_question`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_quiz_answer_fk1` (`answer_id`),
-  ADD KEY `user_quiz_answer_fk2` (`user_quiz_id`);
+  ADD KEY `user_quiz_answer_idx2` (`user_quiz_id`),
+  ADD KEY `user_quiz_answer_idx3` (`question_id`);
+
+--
+-- Index pour la table `user_quiz_question_answer`
+--
+ALTER TABLE `user_quiz_question_answer`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_quiz_question_answer_idx2` (`answer_id`),
+  ADD KEY `user_quiz_question_answer_idx1` (`user_quiz_question_id`);
 
 --
 -- Index pour la table `workgroup`
@@ -384,13 +370,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT pour la table `session`
 --
 ALTER TABLE `session`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT pour la table `solution`
---
-ALTER TABLE `solution`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `user`
@@ -405,9 +385,15 @@ ALTER TABLE `user_quiz`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `user_quiz_answer`
+-- AUTO_INCREMENT pour la table `user_quiz_question`
 --
-ALTER TABLE `user_quiz_answer`
+ALTER TABLE `user_quiz_question`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `user_quiz_question_answer`
+--
+ALTER TABLE `user_quiz_question_answer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -424,33 +410,27 @@ ALTER TABLE `workgroup`
 -- Contraintes pour la table `answer`
 --
 ALTER TABLE `answer`
-  ADD CONSTRAINT `FK_DADD4A251E27F6BF` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+  ADD CONSTRAINT `answer_fk1` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
 --
 -- Contraintes pour la table `question`
 --
 ALTER TABLE `question`
-  ADD CONSTRAINT `FK_B6F7494E853CD175` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`id`);
+  ADD CONSTRAINT `question_fk1` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`id`);
 
 --
 -- Contraintes pour la table `quiz`
 --
 ALTER TABLE `quiz`
-  ADD CONSTRAINT `FK_A412FA92613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`);
-
---
--- Contraintes pour la table `solution`
---
-ALTER TABLE `solution`
-  ADD CONSTRAINT `FK_9F3329DB1E27F6BF` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+  ADD CONSTRAINT `quiz_fk1` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`);
 
 --
 -- Contraintes pour la table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `FK_8D93D6495FD78018` FOREIGN KEY (`workgroup_id`) REFERENCES `workgroup` (`id`),
-  ADD CONSTRAINT `FK_8D93D649613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`),
-  ADD CONSTRAINT `FK_8D93D649D60322AC` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
+  ADD CONSTRAINT `user_fk1` FOREIGN KEY (`workgroup_id`) REFERENCES `workgroup` (`id`),
+  ADD CONSTRAINT `user_fk2` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`),
+  ADD CONSTRAINT `user_fk3` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
 
 --
 -- Contraintes pour la table `user_quiz`
@@ -460,11 +440,18 @@ ALTER TABLE `user_quiz`
   ADD CONSTRAINT `user_quiz_fk2` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`id`);
 
 --
--- Contraintes pour la table `user_quiz_answer`
+-- Contraintes pour la table `user_quiz_question`
 --
-ALTER TABLE `user_quiz_answer`
-  ADD CONSTRAINT `user_quiz_answer_fk1` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`),
-  ADD CONSTRAINT `user_quiz_answer_fk2` FOREIGN KEY (`user_quiz_id`) REFERENCES `user_quiz` (`id`);
+ALTER TABLE `user_quiz_question`
+  ADD CONSTRAINT `user_quiz_answer_fk2` FOREIGN KEY (`user_quiz_id`) REFERENCES `user_quiz` (`id`),
+  ADD CONSTRAINT `user_quiz_answer_fk3` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+
+--
+-- Contraintes pour la table `user_quiz_question_answer`
+--
+ALTER TABLE `user_quiz_question_answer`
+  ADD CONSTRAINT `user_quiz_question_answer_fk1` FOREIGN KEY (`user_quiz_question_id`) REFERENCES `user_quiz_question` (`id`),
+  ADD CONSTRAINT `user_quiz_question_answer_fk2` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
