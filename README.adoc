@@ -34,6 +34,8 @@ I'm only testing the routing of the application to ensure it works well.
 
 == What it looks like
 
+=== All users view
+
 The homepage:
 
 .The PhpQuiz homepage
@@ -54,10 +56,36 @@ The corrected quiz:
 .The PhpQuiz corrected quiz
 image::correction.png[align=center]
 
+=== Administrator users view
+
+Managing Sessions:
+
+.managing sessions
+image::manage-sessions.png[align=center]
+
+Import users with CSV. Here are the needed information:
+
+- LASTNAME
+- FIRSTNAME
+- EMAIL
+- LOGIN
+- PASSWORD
+
+Column can be in a different order if the first line is the header and set the column name.
+The separator is the `,` and no escaped caracters are allowed.
+
+.Import users pasting CSV
+image::import-user.png[align=center]
+
+The quiz results:
+
+.Quiz results
+image::quiz-results.png[align=center]
+
 == Coding standard
 
- phpcs --config-set default_standard PSR2
- phpcs --config-set php_version 70210
+PHP Version: 70210
+No phpcs standard set so it would be the Pear ruleset according to the phpcs VSCode documentation
 
 == Architecture
 
